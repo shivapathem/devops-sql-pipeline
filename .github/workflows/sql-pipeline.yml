@@ -1,0 +1,27 @@
+name: SQL Insert Pipeline
+ 
+on:
+  push:
+ 
+jobs:
+  run-sql:
+    runs-on: ubuntu-latest
+ 
+    steps:
+ 
+      - name: Checkout Code
+        uses: actions/checkout@v3
+ 
+      - name: Install SQL Tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mssql-tools unixodbc-dev
+ 
+      - name: Execute SQL Script
+        run: |
+          /opt/mssql-tools/bin/sqlcmd \
+          -S ${{ secrets.DB_SERVER }} \
+          -U ${{ secrets.DB_USER }} \
+          -P ${{ secrets.DB_PASSWORD }} \
+          -d ${{ secrets.DB_NAME }} \
+          -i insert_data.sql
