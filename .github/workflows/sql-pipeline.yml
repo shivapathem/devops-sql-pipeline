@@ -13,10 +13,10 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
  
-      - name: Execute SQL Script
+      - name: Insert Data into SQL Server
         run: |
-          sqlcmd -S dev-clus15-lsn1.national.core.bbc.co.uk ^
-                 -U ALLOCATE-D ^
-                 -P ALLOCATE-D1 ^
-                 -d BBCSchedules_WP ^
-                 -Q "INSERT INTO DevOps_1 (Test) VALUES ('HelloShiva')"
+          sqlcmd -S dev-clus15-lsn1.national.core.bbc.co.uk -U ALLOCATE-D -P ALLOCATE-D1 -d BBCSchedules_WP -Q "INSERT INTO DevOps_1 (Test) VALUES ('HelloShiva')"
+ 
+      - name: Verify Data
+        run: |
+          sqlcmd -S dev-clus15-lsn1.national.core.bbc.co.uk -U ALLOCATE-D -P ALLOCATE-D1 -d BBCSchedules_WP -Q "SELECT * FROM DevOps_1"
