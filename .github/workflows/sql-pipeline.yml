@@ -2,30 +2,21 @@ name: SQL Insert Pipeline
  
 on:
   push:
+    branches:
+      - main
  
 jobs:
   run-sql:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
  
     steps:
- 
-      - name: Checkout Repository
+      - name: Checkout Code
         uses: actions/checkout@v4
- 
-      - name: Install SQL Tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y curl apt-transport-https
-          curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
-          curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list
-          sudo apt-get update
-          sudo ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev
  
       - name: Execute SQL Script
         run: |
-          /opt/mssql-tools/bin/sqlcmd \
-          -S ${{ secrets.DB_SERVER }} \
-          -U ${{ secrets.DB_USER }} \
-          -P ${{ secrets.DB_PASSWORD }} \
-          -d ${{ secrets.DB_NAME }} \
-          -i insert_data.sql
+          sqlcmd -S dev-clus15-lsn1.national.core.bbc.co.uk ^
+                 -U ALLOCATE-D ^
+                 -P ALLOCATE-D1 ^
+                 -d BBCSchedules_WP ^
+                 -Q "INSERT INTO DevOps_1 (Test) VALUES ('HelloShiva')"
